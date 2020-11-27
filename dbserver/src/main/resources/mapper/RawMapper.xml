@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chamjik.dbserver.mapper.RawMapper">
+
+    <select id= "findAll" parameterType="com.chamjik.dbserver.domain.RawVO" resultType="com.chamjik.dbserver.domain.RawVO">
+            SELECT * FROM raw
+        </select>
+
+     <select id="findByAuthor" parameterType="String" resultType="com.chamjik.dbserver.domain.RawVO">
+           SELECT * FROM raw
+           WHERE raw.author = #{author}
+    </select>
+
+    <insert id="insertRaw" parameterType="java.util.List">
+       INSERT INTO raw(author, timestamp, timezone, latitude, longitude) VALUES
+       <foreach collection="list" item="raw" separator=",">
+           ("${raw.author}", "${raw.timestamp}", "${raw.timezone}", "${raw.latitude}", "${raw.longitude}")
+       </foreach>
+    </insert>
+
+    <delete id="deleteRaw" parameterType="java.util.List">
+        DELETE FROM raw
+        <where>
+        <foreach collection="list" item="raw" separator="OR">
+            (author = ${raw.author}
+            AND timestamp = ${raw.timestamp}
+            AND timezone = ${raw.timezone}
+            AND latitude = ${raw.latitude}
+            AND longitude = ${raw.longitude})
+        </foreach>
+        </where>
+    </delete>
+
+    <delete id="deleteAuthor" parameterType="String">
+        DELETE FROM raw
+        WHERE raw.author = #{author}
+    </delete>
+
+</mapper>
